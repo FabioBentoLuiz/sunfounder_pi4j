@@ -21,7 +21,6 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.SoftPwm;
-import java.awt.Color;
         
 
 
@@ -29,8 +28,6 @@ public class DualColorLED
 {
     private static final int LED_PIN_RED = 0;
     private static final int LED_PIN_GREEN = 1;
-    private static final int ON = 0xff;
-    private static final int OFF = 0x00;
 
    public static void main(String[] args) throws InterruptedException
     {
@@ -44,26 +41,33 @@ public class DualColorLED
        greenLed.setShutdownOptions(true, PinState.LOW);
        redLed.setShutdownOptions(true, PinState.LOW);
        
-        SoftPwm.softPwmCreate(LED_PIN_RED, 0, 50);
-        SoftPwm.softPwmCreate(LED_PIN_GREEN, 0, 50);
+        SoftPwm.softPwmCreate(LED_PIN_RED, 0, 100);
+        SoftPwm.softPwmCreate(LED_PIN_GREEN, 0, 100);
         
         System.out.println("Turn on red.");
-        setLedColor(ON, OFF);
-        
-        Thread.sleep(5000);
+        setLedColor(0xff, 0X00);
+        Thread.sleep(500);
         
         System.out.println("Turn on green.");
-        setLedColor(OFF, ON);
+        setLedColor(0x00, 0xff);
+        Thread.sleep(500);
         
-        Thread.sleep(5000);
+        setLedColor(0xff, 0x45);
+        Thread.sleep(500);
+        
+        setLedColor(0xff, 0xff);
+        Thread.sleep(500);
+        
+        setLedColor(0x7c, 0xfc);
+        Thread.sleep(500);
         
         System.out.println("Shutdown.");
-        setLedColor(OFF, OFF);
+        setLedColor(0x00, 0x00);
         gpio.shutdown();
     }
     
-    public static void setLedColor(int redStatus, int greenStatus){
-        SoftPwm.softPwmWrite(LED_PIN_RED, redStatus);
-        SoftPwm.softPwmWrite(LED_PIN_GREEN, greenStatus);
+    public static void setLedColor(int redTone, int greenTone){
+        SoftPwm.softPwmWrite(LED_PIN_RED, redTone);
+        SoftPwm.softPwmWrite(LED_PIN_GREEN, greenTone);
     }
 }
